@@ -2,14 +2,15 @@ const inquirer = require("inquirer");
 const fs = require("fs");
 const util = require('util');
 const path = require('path');
+const generateReadMe = require('./utils/generateMarkdown');
 
-const writeToFile = util.promisify(fs.writeFile);
+const writeToFileAsync = util.promisify(fs.writeFile);
 
 const questions = () => {
   return inquirer.prompt([
     {
       type: "input",
-      name: "Project Title",
+      name: "title",
       message: "What is the name of your project?",
     },
     {
@@ -19,52 +20,52 @@ const questions = () => {
     },
     {
       type: "input",
-      name: "installation instructions",
+      name: "installation",
       message: "How should I install this?",
     },
     {
       type: "input",
-      name: "usuage information",
+      name: "information",
       message: "How should I use this?",
     },
     {
       type: "input",
-      name: "contribution guidelines",
+      name: "guidelines",
       message: "How can I contribute to this project?",
     },
     {
       type: "input",
-      name: "test instructions",
+      name: "testing",
       message: "How can I test this?",
     },
     {
       type: "list",
       name: "license",
-      message: "Choose your license",
-      choices: [""],
+      message: "Choose your licenses",
+      choices: ['GPL_3.0', 'BSD_3', 'None', 'MIT'],
     },
     {
       type: "input",
-      name: "gitHub",
-      message: "What is your gitHub profile?",
+      name: "GitHub",
+      message: "What is your GitHub profile?",
     },
     {
       type: "input",
       name: "questions",
-      message: "If you have any ",
+      message: "If you have any question, please enter below.",
     },
   ]);
 };
 
 function writeToFile(fileName, data) {
-  return fs.writeFileSync(path.join(process.cwd(), fileName), data)
+  return writeToFileAsync(path.join(process.cwd(), fileName), data)
 };
 
-const generateReadMe = (questions)
+// const generateReadMe = (questions)
 
 const init = () => {
-    promptUser ()
-        .then((answers) = writeToFile('readMe.md', generateReadMe(answers)))
+    questions ()
+        .then((answers) => writeToFile('README.md', generateReadMe(answers)))
         .then(() => console.log('Successfully generated readme.md'))
         .catch((err) => console.error(err));
 };
